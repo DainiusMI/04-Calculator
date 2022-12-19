@@ -46,14 +46,14 @@ export default {
         value: 9
       }
     ],
-    function: [
+    functional: [
       {
         id: "add",
         value: "+"
       },
       {
         id: "subtract",
-        value: "+"
+        value: "-"
       },
       {
         id: "multiply",
