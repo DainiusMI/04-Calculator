@@ -1,5 +1,5 @@
 import React from 'react'
-//import data from './data'
+
 import "./assets/styles/css/index.css"
 import buttonData from "./data"
 
@@ -36,8 +36,6 @@ export default function App() {
     const secondToLastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-2];
 
     function setTemplate() {
-     
-
       // if last symbol is number allow function
       if (/\d/.test(lastSymbol)) {
         setDisplayScreen(prevState => ({
@@ -45,11 +43,17 @@ export default function App() {
           displayValue: ""
         }))
       }
-      // if last symbol is nut a number but displayValue is empty and pressed function is "-"
+      // if last symbol is not a number but displayValue is empty and pressed function is "-"
       else if (displayScreen.displayValue === "" && value === "-") {
         setDisplayScreen(prevState => ({
           displayLine: prevState.displayLine + value,
           displayValue: value
+        }))
+      }
+      else if (lastSymbol == ".") {
+        setDisplayScreen(prevState => ({
+          displayLine: prevState.displayLine.slice(0, -1) + value,
+          displayValue: ""
         }))
       }
     }
@@ -69,7 +73,7 @@ export default function App() {
         break;
 
       case "delete":
-        if (displayScreen.displayValue.length > 0) {
+        if (displayScreen.displayValue !== "") {
           // check if "decimal" was removed if so re
           const deleteLast = lastSymbol == "." && secondToLastSymbol == "0" ? -2 : -1;
 
@@ -86,9 +90,11 @@ export default function App() {
           displayValue: ""
         })
         break;
-        
-      case "equals":
 
+      case "equals":
+          if (/\d/.test(lastSymbol)) {
+
+          }
         break;
     }
   }
@@ -102,7 +108,6 @@ export default function App() {
       <section id="display" className="screen-container"> 
         <p 
           className="displayLine"
-
         >{displayScreen.displayLine}</p>
 
         <p 
