@@ -66,6 +66,14 @@ export default {
       {
         id: "equals",
         value: "="
+      },
+      {
+        id: "delete",
+        value: "<=|"
+      },
+      {
+        id: "clear",
+        value: "AC"
       }
     ]
   }
