@@ -32,8 +32,11 @@ export default function App() {
   function handleFunctions(event) {
     const {id, value} = event.target
 
+    const lastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-1];
+    const secondToLastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-2];
+
     function setTemplate() {
-      const lastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-1];
+     
 
       // if last symbol is number allow function
       if (/\d/.test(lastSymbol)) {
@@ -51,8 +54,11 @@ export default function App() {
       }
     }
 
-    switch (value) {
-      case "-":
+    switch (id) {
+      case "add":
+        setTemplate()
+        break;
+      case "subtract":
         setTemplate()
       /*
         setDisplayScreen(prevState => ({
@@ -62,16 +68,27 @@ export default function App() {
       */
 
         break;
-      case "+":
+      case "multiply":
         setTemplate()
         break;
-      case "/":
+      case "divide":
         setTemplate()
         break;
-      case "*":
-        setTemplate()
+      case "delete":
+        if (displayScreen.displayValue.length > 0) {
+          // check if "decimal" was removed if so re
+          const deleteLast = lastSymbol == "." && secondToLastSymbol == "0" ? -2 : -1;
+
+          setDisplayScreen(prevState => ({
+            displayLine: prevState.displayLine.slice(0, deleteLast),
+            displayValue: prevState.displayValue.slice(0, deleteLast)
+          }))
+        }
         break;
-      case "=":
+      case "clear":
+
+        break;
+      case "equals":
 
         break;
     }
