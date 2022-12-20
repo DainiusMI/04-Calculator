@@ -93,7 +93,14 @@ export default function App() {
 
       case "equals":
           if (/\d/.test(lastSymbol)) {
-
+            const url = "http://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
+            fetch(url).then(resp => resp.json()).then(data => {
+              setDisplayScreen(prevState => ({
+                displayLine: prevState.displayLine + `=${data}`,
+                displayValue: ""
+              }))
+            })
+            console.log("rendered equals")
           }
         break;
     }
