@@ -13,7 +13,8 @@ export default function App() {
   function handleNumbers(event) {
     const value = event.target.value
 
-    if (value === "." && displayScreen.displayValue.length === 0) {
+    // place 0 for a lazy user
+    if (value === "." && displayScreen.displayValue === "" || value === "." &&  displayScreen.displayValue === "-") {
       setDisplayScreen(prevState => ({
         displayLine: prevState.displayLine + 0 + value,
         displayValue: prevState.displayValue + 0 + value
@@ -27,28 +28,39 @@ export default function App() {
     }
   }
 
+  
   function handleFunctions(event) {
-    const value = event.target.value
+    const {id, value} = event.target
 
     function setTemplate() {
       const lastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-1];
 
+      // if last symbol is number allow function
       if (/\d/.test(lastSymbol)) {
-
         setDisplayScreen(prevState => ({
           displayLine: prevState.displayLine + value,
           displayValue: ""
         }))
-
       }
-
+      // if last symbol is nut a number but displayValue is empty and pressed function is "-"
+      else if (displayScreen.displayValue === "" && value === "-") {
+        setDisplayScreen(prevState => ({
+          displayLine: prevState.displayLine + value,
+          displayValue: value
+        }))
+      }
     }
+
     switch (value) {
       case "-":
+        setTemplate()
+      /*
         setDisplayScreen(prevState => ({
           displayLine: prevState.displayLine + value,
           displayValue: prevState.displayValue.length > 0 ? "" : value
         }))
+      */
+
         break;
       case "+":
         setTemplate()
