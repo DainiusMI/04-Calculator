@@ -60,13 +60,6 @@ export default function App() {
         break;
       case "subtract":
         setTemplate()
-      /*
-        setDisplayScreen(prevState => ({
-          displayLine: prevState.displayLine + value,
-          displayValue: prevState.displayValue.length > 0 ? "" : value
-        }))
-      */
-
         break;
       case "multiply":
         setTemplate()
@@ -74,6 +67,7 @@ export default function App() {
       case "divide":
         setTemplate()
         break;
+
       case "delete":
         if (displayScreen.displayValue.length > 0) {
           // check if "decimal" was removed if so re
@@ -85,9 +79,14 @@ export default function App() {
           }))
         }
         break;
-      case "clear":
 
+      case "clear":
+        setDisplayScreen({
+          displayLine: "",
+          displayValue: ""
+        })
         break;
+        
       case "equals":
 
         break;
