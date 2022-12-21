@@ -18,7 +18,6 @@ body {
 
 .App  {
     width: calc( (4  * $button-size ) + ( 5 * $gap-size) );
-
     display: flex;
     flex-direction: column;
     background-color: grey;
@@ -27,28 +26,28 @@ body {
     border-radius: $gap-size;
 }
 
-#display {
+.displayScreen {
     width: 100%;
     height: 4rem;
     background-color: wheat;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-
+    position: relative;
     p {
-        margin-right: $gap-size;
-        text-align: end;
+        position: absolute;
+        right: $gap-size;
     }
-    :last-child {
+    .displayLine {
+        top: $gap-size;
+    }
+    .displayValue {
+        bottom: $gap-size;
         font-size: 2rem;
         font-weight: 600;
     }
 }
 
 
-.button-container {
+.button-grid {
     display: grid;
     grid-template-columns: repeat(4, $button-size);
     grid-template-rows: repeat(5, $button-size);

@@ -7,18 +7,44 @@ export default function App() {
 
   const [displayScreen, setDisplayScreen] = React.useState({
     displayLine: "",
-    displayValue: ""
+    displayValue: "0"
   })
+  const [resultData, setResultData] = React.useState({
+    reset: false,
+    url: "",
+    result: ""
+  })
+
+  React.useEffect(() => {
+    setResultData(prevData => ({
+      ...prevData,
+      url: "https://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
+    }))
+  }, [displayScreen.displayLine])
 
   function handleNumbers(event) {
     const value = event.target.value
 
     // place 0 for a lazy user
-    if (value === "." && displayScreen.displayValue === "" || value === "." &&  displayScreen.displayValue === "-") {
-      setDisplayScreen(prevState => ({
-        displayLine: prevState.displayLine + 0 + value,
-        displayValue: prevState.displayValue + 0 + value
-      }))
+    console.log(displayScreen.displayValue.includes(".") === false)
+
+    if (value === ".") {
+      if (displayScreen.displayValue.includes(".") === false) {
+        console.log("does not include")
+        if (displayScreen.displayValue === "" || displayScreen.displayValue === "-") {
+          setDisplayScreen(prevState => ({
+            displayLine: prevState.displayLine + 0 + value,
+            displayValue: prevState.displayValue + 0 + value
+          }))
+        }
+    }  
+    }
+
+    else if (displayScreen.displayValue === "0") {
+      setDisplayScreen({
+        displayLine: value,
+        displayValue: value
+      })
     }
     else {
       setDisplayScreen(prevState => ({
@@ -36,12 +62,26 @@ export default function App() {
     const secondToLastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-2];
 
     function setTemplate() {
+      if (resultData.reset) {
+        setResultData(prevData => ({
+          ...prevData,
+          reset: false
+        }))
+      }
       // if last symbol is number allow function
       if (/\d/.test(lastSymbol)) {
-        setDisplayScreen(prevState => ({
-          displayLine: prevState.displayLine + value,
-          displayValue: ""
-        }))
+        if (resultData.result !== "") {
+          setDisplayScreen({
+            displayLine: resultData.result + value,
+            displayValue: ""
+          })
+        }
+        else {
+          setDisplayScreen(prevState => ({
+            displayLine: prevState.displayLine + value,
+            displayValue: ""
+          }))
+        }
       }
       // if last symbol is not a number but displayValue is empty and pressed function is "-"
       else if (displayScreen.displayValue === "" && value === "-") {
@@ -73,7 +113,7 @@ export default function App() {
         break;
 
       case "delete":
-        if (displayScreen.displayValue !== "") {
+        if (displayScreen.displayValue !== "" && resultData.reset === false) {
           // check if "decimal" was removed if so re
           const deleteLast = lastSymbol == "." && secondToLastSymbol == "0" ? -2 : -1;
 
@@ -87,25 +127,41 @@ export default function App() {
       case "clear":
         setDisplayScreen({
           displayLine: "",
-          displayValue: ""
+          displayValue: "0"
+        })
+        setResultData({
+          reset: false,
+          url: "",
+          result: ""
         })
         break;
 
       case "equals":
           if (/\d/.test(lastSymbol)) {
-            const url = "http://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
-            fetch(url).then(resp => resp.json()).then(data => {
+
+            fetch(resultData.url)
+            .then((response) => { 
+            console.log("reposonded")
+            return response.json(); })
+            .then(data => {
+            console.log(data)
+          })
+            //const url = "http://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
+            fetch(resultData.url).then(resp => resp.json()).then(data => {
+              setResultData(prevData => ({
+                ...prevData,
+                reset: true,
+                result: data
+              }))
               setDisplayScreen(prevState => ({
                 displayLine: prevState.displayLine + `=${data}`,
-                displayValue: ""
+                displayValue: data
               }))
             })
-            console.log("rendered equals")
           }
         break;
     }
   }
-
 
 
 
