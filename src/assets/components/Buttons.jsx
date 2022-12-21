@@ -24,33 +24,38 @@ export default function Buttons(props) {
     function handleNumbers(event) {
         const value = event.target.value
 
-        if ( /\+|\-|\*|\//.test(displayScreen.displayValue)) {
-            setDisplayScreen(prevData => ({
-                displayLine: prevData.displayLine + value,
-                displayValue: value
-            }))
-        }
-        // decimal 
-        else if (value === "." && displayScreen.displayValue.includes(".") === false) {
+        function besicSetDisplay() {
             setDisplayScreen(prevData => ({
                 displayLine: prevData.displayLine + value,
                 displayValue: prevData.displayValue + value
             }))
         }
 
-        else if (displayScreen.displayValue == "0" && value !== ".") {
-            console.log("tic")
-            setDisplayScreen(prevData => ({
-                displayLine: value,
-                displayValue: prevData.displayValue.slice(1) + value
-            }))
-        }
-        else if (value !== ".") {
+        if ( /\+|\-|\*|\//.test(displayScreen.displayValue)) {
             setDisplayScreen(prevData => ({
                 displayLine: prevData.displayLine + value,
-                displayValue: prevData.displayValue + value
+                displayValue: value
             }))
         }
+        // not decimal point was pressed
+        else if (value !== ".") { 
+            if (displayScreen.displayValue == "0") {
+                setDisplayScreen(prevData => ({
+                    displayLine: value,
+                    displayValue: prevData.displayValue.slice(1) + value
+                }))
+            }
+            else {
+                besicSetDisplay()
+            }
+        }
+        // decimal point was pressed
+        else {
+            if (displayScreen.displayValue.includes(".") === false) {
+                besicSetDisplay()
+            }
+        }
+
     }
 
 
