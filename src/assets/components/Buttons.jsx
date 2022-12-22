@@ -11,13 +11,6 @@ export default function Buttons(props) {
     function handleNumbers(event) {
         const value = event.target.value
 
-        function setTemplate() {
-            setDisplayScreen(prevData => ({
-                displayLine: prevData.displayLine + value,
-                displayValue: prevData.displayValue + value
-            }))
-        }
-
         if (/\+|\-|\*|\//.test(lastOfDisplayLine)) {
             setDisplayScreen(prevData => ({
                 displayLine: value === "." ? 
@@ -72,15 +65,11 @@ export default function Buttons(props) {
         }
         // decimal point was pressed
         else if (displayScreen.displayValue.includes(".") === false) {
-            console.log(lastOfDisplayLine)
             setDisplayScreen(prevData => ({
                 displayLine: prevData.displayLine + value,
                 displayValue: prevData.displayValue + value
             }))
-            
         }
-
-
     }
 
 
@@ -97,7 +86,7 @@ export default function Buttons(props) {
                         displayValue: value
                     })
                 }
-                // if last symbol is a function and second to last is not allow to put negative sign next
+                // if last symbol is a function and second to last is not - allow to put negative sign next
                 else if (/\+|\-|\*|\//.test(lastOfDisplayLine) && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine + value,
@@ -117,7 +106,7 @@ export default function Buttons(props) {
             // handle other function signs
             else {
                 // change the fucntion sign if last symbol is a function sign and secont to last is not
-                // do not allowing to change negative signs in front of displayLine
+                // do not allowing to change negative signs at the start of displayLine
                 if (displayScreen.displayLine !== "-" && /\+|\-|\*|\//.test(lastOfDisplayLine) && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine.slice(0, -1) + value,
@@ -126,6 +115,17 @@ export default function Buttons(props) {
                 }
 
                 else if (!/\+|\-|\*|\//.test(lastOfDisplayLine)) {
+
+                    setDisplayScreen(prevData => ({
+                        displayLine: resultData.result !== "" ?
+                            resultData.result + value :
+                            prevData.displayLine === "0" ? 
+                                value : 
+                                prevData.displayLine + value,
+
+                        displayValue: value                           
+                    }))
+                /*
                     if (resultData.result === "") {
                         setDisplayScreen(prevData => ({
                             displayLine: prevData.displayLine === "0" ? 
@@ -134,7 +134,6 @@ export default function Buttons(props) {
                                 prevData.displayLine + value,
                             displayValue: value
                         }))
-
                     }
                     else {
                         setDisplayScreen({
@@ -142,6 +141,7 @@ export default function Buttons(props) {
                             displayValue: value
                         })
                     }
+                */
                 }
             }
 
@@ -173,7 +173,21 @@ export default function Buttons(props) {
                 functionsTempalte()
             break;
 
-            case "equals":            
+            case "equals": 
+                function processMath(str) {
+                    return Function(`'use strict'; return (${str})`)()
+                }
+                console.log(processMath(displayScreen.displayLine))   
+                setResultData(prevData => ({
+                    ...prevData,
+                    reset: true,
+                    result: processMath(displayScreen.displayLine)
+                }))
+                setDisplayScreen(prevState => ({
+                    displayLine: prevState.displayLine + `=${processMath(displayScreen.displayLine)}`,
+                    displayValue: processMath(displayScreen.displayLine)
+                }))
+            /*
                 //const url = "http://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
                 fetch(resultData.url).then(resp => resp.json()).then(data => {
                     console.log("data: "+ data)
@@ -187,6 +201,7 @@ export default function Buttons(props) {
                         displayValue: data
                     }))
                 })
+            */
             break;
 
         }
