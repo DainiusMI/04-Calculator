@@ -7,4 +7,4 @@ Complete all 5 projects, and you'll earn the Front End Development Libraries cer
 #### NOTE:
 - This is not the fist calculator I have built. The previous app was a challange from [frontendmentor](https://www.frontendmentor.io/home).
 - It was built using vanilla javascript, all calculations where written by me. [link to my previous app](https://github.com/DainiusMI/Calculator-app)
-- This time it is a React project, and for calculations I used and RESTful API [math.js](https://api.mathjs.org/).
+- This time it is a React project, and for calculations I used and RESTful API [math.js](https://api.mathjs.org/) (automated tests at codepen did not like it so running a function and left the code for using API commented)
