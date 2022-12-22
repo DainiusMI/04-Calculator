@@ -117,7 +117,8 @@ export default function Buttons(props) {
                         displayValue: value
                     }))
                 }
-                else if (!/\+|\-|\*|\//.test(lastOfDisplayLine)) {
+                else if (displayScreen.displayValue !== "0" && !/\+|\-|\*|\//.test(lastOfDisplayLine)) {
+                    console.log("it is me")
                     setDisplayScreen(prevData => ({
                         displayLine: resultData.result !== "" ?
                             resultData.result + value :
@@ -129,7 +130,6 @@ export default function Buttons(props) {
                     }))
                 }
             }
-
         }
 
         
@@ -165,7 +165,7 @@ export default function Buttons(props) {
 
             case "equals": 
                 function stringToMath(str) {
-                    return parseFloat(Function(`return (${str})`)().toFixed(4))
+                    return parseFloat(new Function(`return (${str})`)().toFixed(4))
                 }
                 setResultData(prevData => ({
                     ...prevData,
