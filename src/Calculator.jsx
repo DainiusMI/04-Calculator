@@ -12,8 +12,8 @@ import buttonData from "./data"
 #5: My calculator should contain a clickable element with an id="clear".
 #6: My calculator should contain an element to display values with a corresponding id="display".
 #7: At any time, pressing the clear button clears the input and output values, and returns the calculator to its initialized state; 0 should be shown in the element with the id of display.
-
 #8: As I input numbers, I should be able to see my input in the element with the id of display.
+
 #9: In any order, I should be able to add, subtract, multiply and divide a chain of numbers of any length, and when I hit =, the correct result should be shown in the element with the id of display.
 #10: When inputting numbers, my calculator should not allow a number to begin with multiple zeros.
 #11: When the decimal element is clicked, a . should append to the currently displayed value; two . in one number should not be accepted.

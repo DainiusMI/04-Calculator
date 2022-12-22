@@ -3,27 +3,11 @@ import React from "react";
 export default function Buttons(props) {
 
     const {initialScreenState, displayScreen, setDisplayScreen, initialResultData, resultData, setResultData} = props
-    const {displayValue} = displayScreen;
-    const firstSymbol = displayScreen.displayValue[0];
-    const secondSymbol = displayScreen.displayValue[1];
-    const lastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-1];
-    const secondToLastSymbol = displayScreen.displayLine[displayScreen.displayLine.length-2];
+
 
     const lastOfDisplayLine = displayScreen.displayLine[displayScreen.displayLine.length -1]
     const secondToLastOfDisplayLine = displayScreen.displayLine[displayScreen.displayLine.length -2]
     
-    const [displaySymbols, setDisplaySymbols] = React.useState()
-    React.useEffect(() => {
-        setDisplaySymbols({
-            first: displayScreen.displayValue[0] || "",
-            second: displayScreen.displayValue[1] || "",
-            secondToLast: displayScreen.displayValue[displayScreen.displayValue.length -2] || "",
-            last: displayScreen.displayValue[displayScreen.displayValue.length -1] || ""
-        })
-    }, [displayScreen.displayValue])
-
-
-
     function handleNumbers(event) {
         const value = event.target.value
 
@@ -40,15 +24,6 @@ export default function Buttons(props) {
                     displayValue: value
                 }))
         }
-        /*
-        if ( /\+|\-|\*|\//.test(displayScreen.displayValue)) {
-            console.log("tic")
-            setDisplayScreen(prevData => ({
-                displayLine: displayScreen.displayLine === "0" ? value : prevData.displayLine + value,
-                displayValue: value
-            }))
-        }
-        */
         // not decimal point was pressed
         else  if (value !== ".") { 
             if (displayScreen.displayValue === "0") {
@@ -137,7 +112,6 @@ export default function Buttons(props) {
                             displayValue: value
                         })
                     }
-
                 }
             }
 
