@@ -69,7 +69,7 @@ export default {
       },
       {
         id: "delete",
-        value: "<=|"
+        value: ""
       },
       {
         id: "clear",

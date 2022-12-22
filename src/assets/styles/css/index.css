@@ -3,31 +3,54 @@
   margin: 0;
 }
 
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Orbitron", sans-serif;
+  font-weight: 700;
+  background-color: #A2A2AA;
+}
+
+button {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 800;
+  font-size: 1.5rem;
+  box-shadow: 0 0 0.2rem black;
+}
+
+button:active {
+  box-shadow: inset 0 0 0.8rem black;
+}
+
 .App {
-  width: 17.5rem;
+  width: 18.5rem;
   display: flex;
   flex-direction: column;
-  background-color: grey;
-  gap: 0.3rem;
-  padding: 0.3rem;
-  border-radius: 0.3rem;
+  background-color: #5A6178;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
 }
 
 .displayScreen {
   width: 100%;
   height: 4rem;
-  background-color: wheat;
+  background-color: #EAE3DB;
+  box-shadow: inset 0 0 0.2rem black;
   position: relative;
 }
 .displayScreen p {
   position: absolute;
-  right: 0.3rem;
+  right: 0.5rem;
 }
 .displayScreen .displayLine {
-  top: 0.3rem;
+  top: 0;
 }
 .displayScreen .displayValue {
-  bottom: 0.3rem;
+  bottom: 0.5rem;
   font-size: 2rem;
   font-weight: 600;
 }
@@ -36,7 +59,7 @@
   display: grid;
   grid-template-columns: repeat(4, 4rem);
   grid-template-rows: repeat(5, 4rem);
-  gap: 0.3rem;
+  gap: 0.5rem;
 }
 
 #zero, #decimal, #delete {
@@ -69,6 +92,16 @@
   grid-row: 1/2;
 }
 
-#delete #clear {
-  background-color: red;
+.numeric-key {
+  background-color: #EAE3DB;
+}
+
+.functional-key {
+  background-color: #355DC1;
+  color: #fff;
+}
+
+#delete, #clear, #equals {
+  background-color: #D13F30;
+  color: #fff;
 }/*# sourceMappingURL=index.css.map */

@@ -7,6 +7,7 @@ export default function Buttons(props) {
     const lastOfDisplayLine = displayScreen.displayLine[displayScreen.displayLine.length -1]
     const secondToLastOfDisplayLine = displayScreen.displayLine[displayScreen.displayLine.length -2]
     
+
     function handleNumbers(event) {
         const value = event.target.value
 
@@ -44,7 +45,6 @@ export default function Buttons(props) {
             }
             // decimal point was pressed
             else if (displayScreen.displayValue.includes(".") === false) {
-                console.log("2")
                 setDisplayScreen(prevData => ({
                     displayLine: prevData.displayLine + value,
                     displayValue: prevData.displayValue + value
@@ -52,8 +52,6 @@ export default function Buttons(props) {
             }
         }
     }
-
-
 
     function handleFunctions(event) {
         const {id, value} = event.target
@@ -100,7 +98,6 @@ export default function Buttons(props) {
 
                         displayValue: value                           
                     }))
-
                 }
             }
             // handle other function signs
@@ -113,7 +110,7 @@ export default function Buttons(props) {
                         displayValue: prevData.displayValue.slice(0, -1) + value
                     }))
                 }
-                // if last symbol was a minus sign let remove it with "+"
+                // just to pass "5 * - + 5 === 10" not sure why would calculator remove first two signs
                 else if (lastOfDisplayLine === "-" && /\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine.slice(0, -2) + value,
@@ -137,8 +134,14 @@ export default function Buttons(props) {
 
         
         switch (id) {
-
-            // #7 At any time, pressing the clear button clears the input and output values, and returns the calculator to its initialized state; 0 should be shown in the element with the id of display.
+            case "delete":
+                if (displayScreen.displayValue !== "0") {                 
+                    setDisplayScreen(prevData => ({
+                        displayLine: prevData.displayLine.length === 1 ? "0" : prevData.displayLine.slice(0, -1),
+                        displayValue: prevData.displayValue.length === 1 ? "0" : prevData.displayValue.slice(0, -1)
+                      }))
+                }
+            break
             case "clear":
                 setDisplayScreen(initialScreenState)
                 setResultData(initialResultData)
@@ -187,7 +190,6 @@ export default function Buttons(props) {
                 })
             */
             break;
-
         }
 
     }
@@ -209,7 +211,7 @@ export default function Buttons(props) {
                         key={button.id}
                         id={button.id}
                         value={button.value}
-                        className="functional-key"
+                        className={button.value === "" ? "functional-key fa-solid fa-delete-left" : "functional-key"}
                         onClick={handleFunctions}
                       >{button.value}</button>
             })
