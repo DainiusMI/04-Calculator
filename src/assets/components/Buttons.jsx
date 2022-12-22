@@ -19,13 +19,43 @@ export default function Buttons(props) {
         }
 
         if (/\+|\-|\*|\//.test(lastOfDisplayLine)) {
+            setDisplayScreen(prevData => ({
+                displayLine: value === "." ? 
+                    prevData.displayLine + "0" + value :
+                    prevData.displayLine + value,
+
+                displayValue: value === "." ? 
+                    "0" + value :
+                    value
+            }))
+        /*
+            if (value === ".") {
+                setDisplayScreen(prevData => ({
+                    displayLine: prevData.displayLine + "0" + value,
+                    displayValue: "0" + value
+                }))
+            }
+            else {
                 setDisplayScreen(prevData => ({
                     displayLine: prevData.displayLine + value,
                     displayValue: value
                 }))
+            }
+        */
         }
         // not decimal point was pressed
         else  if (value !== ".") { 
+            setDisplayScreen(prevData => ({
+                displayLine: displayScreen.displayValue === "0" ?
+                    value :
+                    prevData.displayLine + value,
+
+                displayValue: displayScreen.displayValue === "0" ?
+                    value : 
+                    prevData.displayValue + value
+            }))
+
+        /*
             if (displayScreen.displayValue === "0") {
                 setDisplayScreen({
                     displayLine: value,
@@ -33,15 +63,23 @@ export default function Buttons(props) {
                 })
             }
             else {
-                setTemplate()
+                setDisplayScreen(prevData => ({
+                    displayLine: prevData.displayLine + value,
+                    displayValue: prevData.displayValue + value
+                }))
             }
+        */
         }
         // decimal point was pressed
-        else {
-            if (displayScreen.displayValue.includes(".") === false) {
-                setTemplate()
-            }
+        else if (displayScreen.displayValue.includes(".") === false) {
+            console.log(lastOfDisplayLine)
+            setDisplayScreen(prevData => ({
+                displayLine: prevData.displayLine + value,
+                displayValue: prevData.displayValue + value
+            }))
+            
         }
+
 
     }
 
@@ -49,16 +87,8 @@ export default function Buttons(props) {
 
     function handleFunctions(event) {
         const {id, value} = event.target
-
-        function setTemplate() {
-            setDisplayScreen(prevData => ({
-                displayLine: prevData.displayLine + value,
-                displayValue: prevData.displayValue + value
-            }))
-        }
         
         function functionsTempalte() {
-
             // handle minus 
             if (value === "-") {
                 if (displayScreen.displayLine === "0") {
