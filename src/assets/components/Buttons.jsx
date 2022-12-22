@@ -4,71 +4,52 @@ export default function Buttons(props) {
 
     const {initialScreenState, displayScreen, setDisplayScreen, initialResultData, resultData, setResultData} = props
 
-
     const lastOfDisplayLine = displayScreen.displayLine[displayScreen.displayLine.length -1]
     const secondToLastOfDisplayLine = displayScreen.displayLine[displayScreen.displayLine.length -2]
     
     function handleNumbers(event) {
         const value = event.target.value
 
-        if (/\+|\-|\*|\//.test(lastOfDisplayLine)) {
-            setDisplayScreen(prevData => ({
-                displayLine: value === "." ? 
-                    prevData.displayLine + "0" + value :
-                    prevData.displayLine + value,
-
-                displayValue: value === "." ? 
-                    "0" + value :
-                    value
-            }))
-        /*
-            if (value === ".") {
-                setDisplayScreen(prevData => ({
-                    displayLine: prevData.displayLine + "0" + value,
-                    displayValue: "0" + value
-                }))
-            }
-            else {
-                setDisplayScreen(prevData => ({
-                    displayLine: prevData.displayLine + value,
-                    displayValue: value
-                }))
-            }
-        */
+        if (displayScreen.displayLine.includes("=")) {
+            setDisplayScreen({
+                displayLine: value,
+                displayValue: value
+            })
+            setResultData(initialResultData)
         }
-        // not decimal point was pressed
-        else  if (value !== ".") { 
-            setDisplayScreen(prevData => ({
-                displayLine: displayScreen.displayValue === "0" ?
-                    value :
-                    prevData.displayLine + value,
+        else {
 
-                displayValue: displayScreen.displayValue === "0" ?
-                    value : 
-                    prevData.displayValue + value
-            }))
-
-        /*
-            if (displayScreen.displayValue === "0") {
-                setDisplayScreen({
-                    displayLine: value,
-                    displayValue: value
-                })
+            if (/\+|\-|\*|\//.test(lastOfDisplayLine)) {
+                setDisplayScreen(prevData => ({
+                    displayLine: value === "." ? 
+                        prevData.displayLine + "0" + value :
+                        prevData.displayLine + value,
+    
+                    displayValue: value === "." ? 
+                        "0" + value :
+                        value
+                }))
             }
-            else {
+            // not decimal point was pressed
+            else  if (value !== ".") { 
+                setDisplayScreen(prevData => ({
+                    displayLine: displayScreen.displayValue === "0" ?
+                        value :
+                        prevData.displayLine + value,
+    
+                    displayValue: displayScreen.displayValue === "0" ?
+                        value : 
+                        prevData.displayValue + value
+                }))
+            }
+            // decimal point was pressed
+            else if (displayScreen.displayValue.includes(".") === false) {
+                console.log("2")
                 setDisplayScreen(prevData => ({
                     displayLine: prevData.displayLine + value,
                     displayValue: prevData.displayValue + value
                 }))
             }
-        */
-        }
-        // decimal point was pressed
-        else if (displayScreen.displayValue.includes(".") === false) {
-            setDisplayScreen(prevData => ({
-                displayLine: prevData.displayLine + value,
-                displayValue: prevData.displayValue + value
-            }))
         }
     }
 
@@ -78,26 +59,38 @@ export default function Buttons(props) {
         const {id, value} = event.target
         
         function functionsTempalte() {
-
+            // if function was called imediatly after getting result
+            if (displayScreen.displayLine.includes("=")) {
+                setDisplayScreen({
+                    displayLine: resultData.result + value,
+                    displayValue: value
+                })
+                setResultData(initialResultData)
+            }
             // handle minus 
             if (value === "-") {
+                // initial value set to negative
                 if (displayScreen.displayLine === "0") {
-                    console.log("1")
                     setDisplayScreen({
                         displayLine: value,
                         displayValue: value
                     })
                 }
-                // if last symbol is a function and second to last is not - allow to put negative sign next
-                else if (/\+|\-|\*|\//.test(lastOfDisplayLine) && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
-                    console.log("2")
+                else if (displayScreen.displayLine.includes("-") && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
+                console.log("it is me")
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine + value,
-                        displayValue: prevData.displayValue + value
+                        displayValue: value
+                    }))
+                }
+                // if last symbol is a function and second to last is not - allow to put negative sign next
+                else if (/\+|\-|\*|\//.test(lastOfDisplayLine) && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
+                    setDisplayScreen(prevData => ({
+                        displayLine: prevData.displayLine + value,
+                        displayValue: value
                     }))
                 }
                 else if (!/\+|\-|\*|\//.test(lastOfDisplayLine)) {
-                    
                     setDisplayScreen(prevData => ({
                         displayLine: resultData.result !== "" ?
                             resultData.result + value :
@@ -108,16 +101,6 @@ export default function Buttons(props) {
                         displayValue: value                           
                     }))
 
-                /*
-                    setDisplayScreen(prevData => ({
-                        displayLine: prevData.displayLine === "0" ? 
-                           // prevData.displayValue + value : 
-                            value : 
-                            prevData.displayLine + value,
-                        displayValue: value
-                    }))
-
-                */
                 }
             }
             // handle other function signs
@@ -130,9 +113,14 @@ export default function Buttons(props) {
                         displayValue: prevData.displayValue.slice(0, -1) + value
                     }))
                 }
-
+                // if last symbol was a minus sign let remove it with "+"
+                else if (lastOfDisplayLine === "-" && /\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
+                    setDisplayScreen(prevData => ({
+                        displayLine: prevData.displayLine.slice(0, -2) + value,
+                        displayValue: value
+                    }))
+                }
                 else if (!/\+|\-|\*|\//.test(lastOfDisplayLine)) {
-
                     setDisplayScreen(prevData => ({
                         displayLine: resultData.result !== "" ?
                             resultData.result + value :
@@ -142,26 +130,8 @@ export default function Buttons(props) {
 
                         displayValue: value                           
                     }))
-                /*
-                    if (resultData.result === "") {
-                        setDisplayScreen(prevData => ({
-                            displayLine: prevData.displayLine === "0" ? 
-                               // prevData.displayValue + value : 
-                                value : 
-                                prevData.displayLine + value,
-                            displayValue: value
-                        }))
-                    }
-                    else {
-                        setDisplayScreen({
-                            displayLine: resultData.result + value,
-                            displayValue: value
-                        })
-                    }
-                */
                 }
             }
-
 
         }
 
@@ -191,18 +161,16 @@ export default function Buttons(props) {
             break;
 
             case "equals": 
-                function processMath(str) {
-                    return parseFloat(Function(`'use strict'; return (${str})`)().toFixed(4))
+                function stringToMath(str) {
+                    return parseFloat(Function(`return (${str})`)().toFixed(4))
                 }
-                console.log(processMath(displayScreen.displayLine))   
                 setResultData(prevData => ({
                     ...prevData,
-                    reset: true,
-                    result: processMath(displayScreen.displayLine)
+                    result: stringToMath(displayScreen.displayLine)
                 }))
                 setDisplayScreen(prevState => ({
-                    displayLine: prevState.displayLine + `=${processMath(displayScreen.displayLine)}`,
-                    displayValue: processMath(displayScreen.displayLine)
+                    displayLine: prevState.displayLine + `=${stringToMath(displayScreen.displayLine)}`,
+                    displayValue: stringToMath(displayScreen.displayLine)
                 }))
             /*
                 //const url = "http://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
@@ -210,7 +178,6 @@ export default function Buttons(props) {
                     console.log("data: "+ data)
                     setResultData(prevData => ({
                         ...prevData,
-                        reset: true,
                         result: data
                     }))
                     setDisplayScreen(prevState => ({
