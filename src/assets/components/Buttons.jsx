@@ -78,9 +78,11 @@ export default function Buttons(props) {
         const {id, value} = event.target
         
         function functionsTempalte() {
+
             // handle minus 
             if (value === "-") {
                 if (displayScreen.displayLine === "0") {
+                    console.log("1")
                     setDisplayScreen({
                         displayLine: value,
                         displayValue: value
@@ -88,12 +90,25 @@ export default function Buttons(props) {
                 }
                 // if last symbol is a function and second to last is not - allow to put negative sign next
                 else if (/\+|\-|\*|\//.test(lastOfDisplayLine) && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
+                    console.log("2")
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine + value,
                         displayValue: prevData.displayValue + value
                     }))
                 }
                 else if (!/\+|\-|\*|\//.test(lastOfDisplayLine)) {
+                    
+                    setDisplayScreen(prevData => ({
+                        displayLine: resultData.result !== "" ?
+                            resultData.result + value :
+                            prevData.displayLine === "0" ? 
+                                value : 
+                                prevData.displayLine + value,
+
+                        displayValue: value                           
+                    }))
+
+                /*
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine === "0" ? 
                            // prevData.displayValue + value : 
@@ -101,6 +116,8 @@ export default function Buttons(props) {
                             prevData.displayLine + value,
                         displayValue: value
                     }))
+
+                */
                 }
             }
             // handle other function signs
@@ -175,7 +192,7 @@ export default function Buttons(props) {
 
             case "equals": 
                 function processMath(str) {
-                    return Function(`'use strict'; return (${str})`)()
+                    return parseFloat(Function(`'use strict'; return (${str})`)().toFixed(4))
                 }
                 console.log(processMath(displayScreen.displayLine))   
                 setResultData(prevData => ({
