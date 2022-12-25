@@ -75,7 +75,6 @@ export default function Buttons(props) {
                     })
                 }
                 else if (displayScreen.displayLine.includes("-") && !/\+|\-|\*|\//.test(secondToLastOfDisplayLine)) {
-                console.log("it is me")
                     setDisplayScreen(prevData => ({
                         displayLine: prevData.displayLine + value,
                         displayValue: value
@@ -164,17 +163,24 @@ export default function Buttons(props) {
             break;
 
             case "equals": 
-                function stringToMath(str) {
-                    return parseFloat(new Function(`return (${str})`)().toFixed(4))
+                const regexPattern = /\-?\d+\.?\d*(\+|\-|\*|\/)\-?\d+/;
+                console.log(regexPattern.test(displayScreen.displayLine) && !displayScreen.displayLine.includes("="))
+
+                if (regexPattern.test(displayScreen.displayLine) && !displayScreen.displayLine.includes("=")) {
+                    function stringToMath(str) {
+                        return parseFloat(new Function(`return (${str})`)().toFixed(4))
+                    }
+                    setResultData(prevData => ({
+                        ...prevData,
+                        result: stringToMath(displayScreen.displayLine)
+                    }))
+                    setDisplayScreen(prevState => ({
+                        displayLine: prevState.displayLine + `=${stringToMath(displayScreen.displayLine)}`,
+                        displayValue: stringToMath(displayScreen.displayLine)
+                    }))
                 }
-                setResultData(prevData => ({
-                    ...prevData,
-                    result: stringToMath(displayScreen.displayLine)
-                }))
-                setDisplayScreen(prevState => ({
-                    displayLine: prevState.displayLine + `=${stringToMath(displayScreen.displayLine)}`,
-                    displayValue: stringToMath(displayScreen.displayLine)
-                }))
+
+
             /*
                 //const url = "http://api.mathjs.org/v4/?expr=" + displayScreen.displayLine.replaceAll("+", "%2B").replaceAll("/", "%2F")
                 fetch(resultData.url).then(resp => resp.json()).then(data => {
